@@ -271,7 +271,7 @@
   .hero-image-wrapper {
     position: absolute;
     right: 3rem;
-    top: 40%;
+    top: 32%;
     transform: translateY(-50%);
     width: 280px;
     padding: 10px;
@@ -292,8 +292,8 @@
 
   .terminal {
     position: absolute;
-    right: 18rem;
-    top: 65%;
+    right: 28rem;
+    top: 40%;
     transform: translateY(-50%);
     width: 360px;
     background: var(--surface);
@@ -307,8 +307,17 @@
     z-index: 2;
   }
   @media (max-width: 1300px) {
-    .terminal { display: none; }
+  .terminal {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    width: 100%;
+    max-width: 420px;
+    margin: 2rem auto 0;
+    font-size: 0.75rem;
   }
+}
   .terminal-bar {
     background: var(--bg2);
     padding: 0.6rem 1rem;
@@ -669,6 +678,11 @@
     nav ul { flex-wrap: wrap; justify-content: center; gap: 1rem; }
     #hero { padding: 10rem 1.5rem 3rem; flex-direction: column; align-items: flex-start; }
     .hero-image-wrapper { display: block; position: relative; right: auto; top: auto; transform: none; width: 100%; max-width: 280px; margin: 3rem auto 0; align-self: center; }
+    .terminal {
+    width: 100%;
+    max-width: 100%;
+    font-size: 0.7rem;
+    }
     .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
     .skills-container { grid-template-columns: 1fr 1fr; }
     .projects-grid { grid-template-columns: 1fr; }
@@ -754,7 +768,7 @@
       <div><span class="t-key">cgpa</span> = <span class="t-val">7.32</span></div>
       <br>
       <div><span class="t-key">languages</span> = [</div>
-      <div>&nbsp;&nbsp;<span class="t-val">"Python"</span>, <span class="t-val">"Java"</span>, <span class="t-val">"C"</span>,</div>
+      <div>&nbsp;&nbsp;<span class="t-val">"Java"</span>, <span class="t-val">"Python"</span>, <span class="t-val">"C"</span>,</div>
       <div>&nbsp;&nbsp;<span class="t-val">"JavaScript"</span>, <span class="t-val">"SQL"</span></div>
       <div>]</div>
       <br>
@@ -991,7 +1005,7 @@
         <span class="stack-tag">JavaScript</span>
         <span class="stack-tag">Web Audio API</span>
       </div>
-      <a href="https://pbainst.in/TUTORIAL/AUDIO%20TRIM%20AND%20MERGE/AUDIO%20TRIM%20AND%20MERGE.html" target="_blank" rel="noopener noreferrer" class="project-arrow">View Project <span>→</span></a>
+      <a href="https://pbainst.in/TUTORIAL/AUDIO%20TRIM%20AND%20MERGE/AUDIO%20TRIM%20AND%20MERGE.html" target="_blank" rel="noopener noreferrer" class="project-arrow">Live Demo <span>→</span></a>
     </div>
     <div class="project-card reveal">
       <div class="project-num">PROJECT_02</div>
