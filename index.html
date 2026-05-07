@@ -5,19 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Krishna Kanta Rana — AI/ML Engineer</title>
 <style>
-  :root {
-    --bg: #080c0a;
-    --bg2: #0e120f;
-    --surface: #121814;
-    --border: #232d22;
-    --accent: #b8c25d;
-    --accent2: #8a9a5b;
-    --accent3: #dce282;
-    --text: #f0f4eb;
-    --muted: #85967b;
-    --grid: rgba(184, 194, 93, 0.04);
-  }
-
+ :root {
+  --bg: #080c0a;
+  --bg2: #0e120f;
+  --surface: #121814;
+  --border: #232d22;
+  --accent: #b8c25d;
+  --accent2: #8a9a5b;
+  --accent3: #dce282;
+  --text: #f0f4eb;
+  --muted: #85967b;
+  --grid: rgba(184, 194, 93, 0.04);
+}
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
@@ -73,17 +72,27 @@
     opacity: 0.4;
   }
 
-  nav {
+  /* ── LAYOUT SHELL ── */
+  /* On desktop the sidebar is always visible, so we push the page body right */
+  @media (min-width: 901px) {
+    body { padding-left: 260px; }
+  }
+
+  /* ── TOPBAR (mobile only) ── */
+  .topbar {
     position: fixed;
     top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 1.2rem 3rem;
-    display: flex;
+    z-index: 300;
+    padding: 1.1rem 2rem;
+    display: none; /* hidden on desktop */
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(180deg, rgba(8,12,10,0.95) 0%, transparent 100%);
-    backdrop-filter: blur(12px);
+    background: linear-gradient(180deg, rgba(8,12,10,0.97) 0%, transparent 100%);
+    backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
+  }
+  @media (max-width: 900px) {
+    .topbar { display: flex; }
   }
 
   .nav-logo {
@@ -96,27 +105,170 @@
   }
   .nav-logo span { color: var(--text); }
 
-  nav ul { display: flex; gap: 2.5rem; list-style: none; }
-  nav a {
+  /* Hamburger button — mobile only */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: none;
+    z-index: 400;
+    transition: border-color 0.3s;
+    flex-shrink: 0;
+  }
+  .hamburger:hover { border-color: var(--accent); }
+  .hamburger span {
+    display: block;
+    width: 20px;
+    height: 1.5px;
+    background: var(--accent);
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s, width 0.3s;
+    transform-origin: center;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* Sidebar overlay — mobile only */
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 350;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    backdrop-filter: blur(2px);
+  }
+  @media (max-width: 900px) {
+    .sidebar-overlay.visible { opacity: 1; pointer-events: all; }
+  }
+
+  /* Sidebar panel */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    z-index: 360;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* Desktop: always visible, no transition needed */
+    transform: translateX(0);
+  }
+
+  /* Mobile: sidebar starts hidden, slides in on .open */
+  @media (max-width: 900px) {
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      z-index: 360;
+    }
+    .sidebar.open { transform: translateX(0); }
+  }
+
+  /* Sidebar top strip */
+  .sidebar-header {
+    padding: 1.4rem 1.8rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+  }
+  .sidebar-logo {
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    text-decoration: none;
+  }
+  .sidebar-logo span { color: var(--text); }
+
+  /* Nav links */
+  .sidebar-nav {
+    flex: 1;
+    padding: 2rem 0 1rem;
+    overflow-y: auto;
+  }
+  .sidebar-nav ul { list-style: none; }
+  .sidebar-nav li { border-bottom: 1px solid rgba(35,45,34,0.5); }
+  .sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.8rem;
     color: var(--muted);
     text-decoration: none;
-    font-size: 0.8rem;
-    letter-spacing: 0.15em;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    transition: color 0.2s;
+    transition: color 0.2s, background 0.2s, padding-left 0.25s;
     position: relative;
   }
-  nav a::after {
+  .sidebar-nav a .nav-num {
+    font-size: 0.6rem;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    min-width: 22px;
+  }
+  .sidebar-nav a::before {
     content: '';
     position: absolute;
-    bottom: -4px; left: 0; right: 0;
-    height: 1px;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
     background: var(--accent);
-    transform: scaleX(0);
-    transition: transform 0.3s;
+    transform: scaleY(0);
+    transition: transform 0.25s;
   }
-  nav a:hover { color: var(--accent); }
-  nav a:hover::after { transform: scaleX(1); }
+  .sidebar-nav a:hover { color: var(--accent); padding-left: 2.2rem; background: rgba(184,194,93,0.04); }
+  .sidebar-nav a:hover::before { transform: scaleY(1); }
+
+  /* Download CV button at bottom */
+  .sidebar-footer {
+    padding: 1.5rem 1.8rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .sidebar-cv-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: none;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .sidebar-cv-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.4s;
+  }
+  .sidebar-cv-btn:hover::before { transform: translateX(100%); }
+  .sidebar-cv-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(184,194,93,0.35); }
 
   section { position: relative; z-index: 1; }
 
@@ -125,9 +277,49 @@
     min-height: 100vh;
     display: flex;
     align-items: center;
-    padding: 8rem 3rem 4rem;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 8rem 2.5rem 4rem;
     position: relative;
     overflow: hidden;
+  }
+  @media (min-width: 901px) {
+    #hero { padding-top: 3rem; }
+  }
+
+  .hero-content {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 460px;
+    z-index: 2;
+  }
+
+  .hero-right {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+    z-index: 2;
+    animation: fadeUp 1s ease 0.4s forwards;
+    opacity: 0;
+    min-width: 0;
+  }
+
+  .hero-image-wrapper {
+    width: clamp(220px, 26vw, 340px);
+    padding: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(184, 194, 93, 0.15);
+    align-self: center;
+  }
+  .hero-image-wrapper img {
+    width: 100%;
+    border-radius: 4px;
+    display: block;
+    filter: sepia(0.2) contrast(1.05) brightness(0.95);
   }
 
   .hero-glow {
@@ -268,90 +460,6 @@
     transform: translateY(-2px);
   }
 
-  .hero-image-wrapper {
-    position: absolute;
-    right: 3rem;
-    top: 32%;
-    transform: translateY(-50%);
-    width: 280px;
-    padding: 10px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    animation: fadeUp 1s ease 0.4s forwards;
-    opacity: 0;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(184, 194, 93, 0.1);
-    z-index: 1;
-  }
-  .hero-image-wrapper img {
-    width: 100%;
-    border-radius: 4px;
-    display: block;
-    filter: sepia(0.2) contrast(1.05) brightness(0.95);
-  }
-
-  .terminal {
-    position: absolute;
-    right: 28rem;
-    top: 40%;
-    transform: translateY(-50%);
-    width: 360px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-    font-size: 0.78rem;
-    animation: fadeUp 1s ease 0.5s forwards;
-    opacity: 0;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(184, 194, 93, 0.15);
-    z-index: 2;
-  }
-  @media (max-width: 1300px) {
-  .terminal {
-    position: relative;
-    right: auto;
-    top: auto;
-    transform: none;
-    width: 100%;
-    max-width: 420px;
-    margin: 2rem auto 0;
-    font-size: 0.75rem;
-  }
-}
-  .terminal-bar {
-    background: var(--bg2);
-    padding: 0.6rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .t-red { background: #ff5f57; }
-  .t-yellow { background: #ffbd2e; }
-  .t-green { background: #28ca41; }
-  .terminal-title {
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 0.7rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-  }
-  .terminal-body { padding: 1.2rem; line-height: 1.7; font-family: 'Courier New', Courier, monospace; }
-  .terminal-body > div { display: block; min-height: 1.4em; white-space: nowrap; overflow: hidden; }
-  .t-comment { color: #52664b; }
-  .t-prompt { color: var(--accent); }
-  .t-output { color: var(--accent3); }
-  .t-key { color: var(--accent2); }
-  .t-val { color: #e8d5b7; }
-  .t-cursor {
-    display: inline-block;
-    width: 7px; height: 1em;
-    background: var(--accent);
-    animation: blink 1s step-end infinite;
-    vertical-align: text-bottom;
-    margin-left: 2px;
-  }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
@@ -674,15 +782,10 @@
 
   /* MOBILE */
   @media (max-width: 900px) {
-    nav { flex-direction: column; padding: 1.5rem; gap: 1.2rem; }
-    nav ul { flex-wrap: wrap; justify-content: center; gap: 1rem; }
-    #hero { padding: 10rem 1.5rem 3rem; flex-direction: column; align-items: flex-start; }
-    .hero-image-wrapper { display: block; position: relative; right: auto; top: auto; transform: none; width: 100%; max-width: 280px; margin: 3rem auto 0; align-self: center; }
-    .terminal {
-    width: 100%;
-    max-width: 100%;
-    font-size: 0.7rem;
-    }
+    #hero { padding: 10rem 1.5rem 3rem; flex-direction: column; align-items: flex-start; gap: 2rem; }
+    .hero-right { width: 100%; align-items: stretch; }
+    .terminal { width: 100%; font-size: 0.7rem; }
+    .hero-image-wrapper { width: 100%; max-width: 280px; align-self: center; }
     .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
     .skills-container { grid-template-columns: 1fr 1fr; }
     .projects-grid { grid-template-columns: 1fr; }
@@ -707,19 +810,43 @@
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="scanline"></div>
 
-<!-- Navigation -->
-<nav>
+<!-- Topbar -->
+<div class="topbar">
   <a href="#hero" class="nav-logo">KKR<span>.dev</span></a>
-  <ul>
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#proficiency">Proficiency</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#education">Education</a></li>
-    <li><a href="#resume">Resume</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
+  <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</div>
+
+<!-- Sidebar overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="#hero" class="sidebar-logo">KKR<span>.dev</span></a>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul>
+      <li><a href="#about" class="sidebar-link"><span class="nav-num">01</span>About</a></li>
+      <li><a href="#skills" class="sidebar-link"><span class="nav-num">02</span>Skills</a></li>
+      <li><a href="#proficiency" class="sidebar-link"><span class="nav-num">03</span>Proficiency</a></li>
+      <li><a href="#projects" class="sidebar-link"><span class="nav-num">04</span>Projects</a></li>
+      <li><a href="#education" class="sidebar-link"><span class="nav-num">05</span>Education</a></li>
+      <li><a href="#contact" class="sidebar-link"><span class="nav-num">06</span>Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="cv_resume.pdf" download="cv_resume.pdf" class="sidebar-cv-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download CV
+    </a>
+  </div>
+</aside>
 
 <!-- Hero -->
 <section id="hero">
@@ -745,35 +872,9 @@
     </div>
   </div>
 
-  <div class="hero-image-wrapper">
-    <img src="profile.jpg" alt="Krishna Kanta Rana">
-  </div>
-
-  <div class="terminal">
-    <div class="terminal-bar">
-      <div class="terminal-dot t-red"></div>
-      <div class="terminal-dot t-yellow"></div>
-      <div class="terminal-dot t-green"></div>
-      <span class="terminal-title">krishna@dev ~ portfolio.py</span>
-    </div>
-    <div class="terminal-body">
-      <div class="t-comment"># Initializing developer profile...</div>
-      <div><span class="t-prompt">$ </span>python portfolio.py</div>
-      <div class="t-output">Loading Krishna Kanta Rana...</div>
-      <br>
-      <div><span class="t-key">name</span> = <span class="t-val">"Krishna Kanta Rana"</span></div>
-      <div><span class="t-key">role</span> = <span class="t-val">"AI/ML + Full Stack"</span></div>
-      <div><span class="t-key">college</span> = <span class="t-val">"STCET, Kolkata"</span></div>
-      <div><span class="t-key">year</span> = <span class="t-val">"3rd Year B.Tech"</span></div>
-      <div><span class="t-key">cgpa</span> = <span class="t-val">7.32</span></div>
-      <br>
-      <div><span class="t-key">languages</span> = [</div>
-      <div>&nbsp;&nbsp;<span class="t-val">"Java"</span>, <span class="t-val">"Python"</span>, <span class="t-val">"C"</span>,</div>
-      <div>&nbsp;&nbsp;<span class="t-val">"JavaScript"</span>, <span class="t-val">"SQL"</span></div>
-      <div>]</div>
-      <br>
-      <div><span class="t-key">status</span> = <span class="t-output">"Open to opportunities"</span></div>
-      <div><span class="t-prompt">$ </span><span class="t-cursor"></span></div>
+  <div class="hero-right">
+    <div class="hero-image-wrapper">
+      <img src="profile.jpg" alt="Krishna Kanta Rana">
     </div>
   </div>
 </section>
@@ -1214,7 +1315,7 @@
     requestAnimationFrame(animateRing);
   }
   animateRing();
-  document.querySelectorAll('a, button, .project-card, .skill-card, .stat, .edu-card, .prof-card').forEach(el => {
+  document.querySelectorAll('a, button, .project-card, .skill-card, .stat, .edu-card, .prof-card, .hamburger, .sidebar-cv-btn').forEach(el => {
     el.addEventListener('mouseenter', () => {
       cursor.style.width = '16px';
       cursor.style.height = '16px';
@@ -1268,14 +1369,40 @@
     });
   });
 
-  // Typing effect for terminal — reveal lines one by one with no overlap
-  const termLines = document.querySelectorAll('.terminal-body > div');
-  termLines.forEach(line => { line.style.display = 'none'; });
-  termLines.forEach((line, i) => {
-    setTimeout(() => {
-      line.style.display = 'block';
-    }, 900 + i * 160);
+  // Hamburger / sidebar (mobile only)
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+  function isMobile() { return window.innerWidth <= 900; }
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    sidebarOverlay.classList.add('visible');
+    hamburgerBtn.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('visible');
+    hamburgerBtn.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  hamburgerBtn.addEventListener('click', () => {
+    if (!isMobile()) return;
+    sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
   });
+  sidebarOverlay.addEventListener('click', closeSidebar);
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.addEventListener('click', () => { if (isMobile()) closeSidebar(); });
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && isMobile()) closeSidebar(); });
+  // On resize to desktop, reset any mobile-open state
+  window.addEventListener('resize', () => {
+    if (!isMobile()) closeSidebar();
+  });
+
 </script>
 </body>
 </html>
